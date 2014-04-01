@@ -1,29 +1,32 @@
 Summary:	Advanced Subtitle Editor
 Name:		aegisub
-Version:	2.1.8
+Version:	3.1.2
 Release:	1%{?dist}
 
 URL:		http://www.aegisub.org
 Group:		Applications/Multimedia
 License:	BSD
-Source:		http://ftp.aegisub.org/pub/releases/%{name}-%{version}.tar.gz
-Patch0:		aegisub-2.1.8-fatal-exceptions.patch
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:	http://ftp.aegisub.org/pub/archives/releases/source/%{name}-%{version}.tar.xz
 
 BuildRequires:	alsa-lib-devel
 BuildRequires:	portaudio-devel
 BuildRequires:	pulseaudio-libs-devel
 BuildRequires:	libass-devel
 BuildRequires:	ffmpeg-devel
+BuildRequires:	fftw-devel
 BuildRequires:	hunspell-devel
-BuildRequires:	wxGTK-devel
-BuildRequires:	perl-devel
-BuildRequires:	perl-ExtUtils-Embed
-BuildRequires:	ruby-devel
+BuildRequires:	wxGTK3-devel
+%if 0%{?fedora} >= 20
+BuildRequires:	compat-lua-devel
+%else
 BuildRequires:	lua-devel
+%endif
 BuildRequires:	freetype-devel
 BuildRequires:	mesa-libGLU-devel
 BuildRequires:	mesa-libGL-devel
+BuildRequires:	ffms2-devel
+BuildRequires:	boost-devel
+BuildRequires:	libicu-devel
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 
@@ -31,43 +34,30 @@ BuildRequires:	intltool
 %description
 Aegisub is an advanced subtitle editor that assists in the creation of
 subtitles, translations, and complex overlays using audio or video. Developed
-by enthusiasts it builds on workflows created and perfected through
+by enthusiasts it builds on work-flows created and perfected through
 professional, hobby, and everyday use.
 
 
 %prep
-%setup -q
-%patch0 -p1 -b .fatal-exceptions
+%setup -q -n %{name}-%{version}/aegisub
 
 
 %build
-export LDFLAGS="-lz"
-export CXXFLAGS="-D__STDC_CONSTANT_MACROS $RPM_OPT_FLAGS"
+#remove version postfix
+sed -e 's/aegisub-3\.1/aegisub/' -e 's/aegisub-31/aegisub/' -i configure
 %configure \
 	--without-oss \
 	--without-openal \
-	--with-perl \
-	--with-ruby \
-	--with-provider-video=ffmpeg \
-	--with-provider-audio=ffmpeg \
-	--with-player-audio=pulseaudio
+	--with-player-audio=pulseaudio \
+	--with-wx-config=wx-config-3.0
 
 make %{?_smp_mflags}
 
 
 %install
-rm -rf %{buildroot}
-
-make DESTDIR=%{buildroot} install
-rm -rf %{buildroot}%{_datadir}/doc
-
-find %{buildroot} -name "*.pl" -exec chmod 755 {} \;
-
-%find_lang aegisub21
-
-
-%clean
-rm -rf %{buildroot}
+%make_install
+desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
+%find_lang %{name}
 
 
 %post
@@ -87,17 +77,18 @@ update-desktop-database &> /dev/null || :
 gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
-%files -f aegisub21.lang
-%defattr(-,root,root)
-%doc README INSTALL automation/demos/ automation/v4-docs/ automation/automation3.txt
-%{_bindir}/aegisub-2.1
-%dir %{_datadir}/aegisub
-%{_datadir}/aegisub/*
-%{_datadir}/applications/aegisub.desktop
-%{_datadir}/icons/hicolor/*/apps/aegisub.*
+%files -f %{name}.lang
+%doc LICENCE automation/demos/ automation/v4-docs/
+%{_bindir}/%{name}
+%{_datadir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
 
 
 %changelog
+* Fri Mar 28 2014 Ivan Epifanov <isage.dna@gmail.com> - 3.1.2-1.R
+- update to 3.1.2
+
 * Wed Jan 12 2011 Arkady L. Shane <ashejn@yandex-team.ru> - 2.1.8-1
 - initial build for Fedora
 - fix build with ffmpeg
