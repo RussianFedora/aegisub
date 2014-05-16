@@ -1,6 +1,6 @@
 Summary:	Advanced Subtitle Editor
 Name:		aegisub
-Version:	3.1.2
+Version:	3.1.3
 Release:	1%{?dist}
 
 URL:		http://www.aegisub.org
@@ -39,7 +39,7 @@ professional, hobby, and everyday use.
 
 
 %prep
-%setup -q -n %{name}-%{version}/aegisub
+%setup -q -n %{name}-%{version}
 
 
 %build
@@ -86,6 +86,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat May 17 2014 Ivan Epifanov <isage.dna@gmail.com> - 3.1.3-1.R
+- update to 3.1.3
+
 * Fri Mar 28 2014 Ivan Epifanov <isage.dna@gmail.com> - 3.1.2-1.R
 - update to 3.1.2
 
