@@ -1,13 +1,15 @@
+%define rev 20150919git7eb250
 Summary:	Advanced Subtitle Editor
 Name:		aegisub
 Version:	3.2.2
-Release:	1%{?dist}
+Release:	2.%{rev}%{?dist}
 
 URL:		http://www.aegisub.org
 Group:		Applications/Multimedia
 License:	BSD
-Source0:	http://ftp.aegisub.org/pub/archives/releases/source/%{name}-%{version}.tar.xz
+Source0:	%{name}-%{version}-%{rev}.tar.xz
 
+BuildRequires:  automake, autoconf, libtool
 BuildRequires:	alsa-lib-devel
 BuildRequires:	portaudio-devel
 BuildRequires:	pulseaudio-libs-devel
@@ -43,9 +45,10 @@ professional, hobby, and everyday use.
 
 
 %build
+if ! test -x configure; then ./autogen.sh; fi;
 #remove version postfix
 sed -e 's/aegisub-3\.2/aegisub/' -e 's/aegisub-32/aegisub/' -i configure
-%configure \
+LDFLAGS='-lpthread' %configure \
 	--without-oss \
 	--without-openal \
 	--with-player-audio=pulseaudio \
@@ -86,6 +89,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Oct 31 2015 Arkady L. Shane <ashejn@russianfedora.pro> - 3.2.2-2.20151030git91154c.R
+- update to last snapshot
+
 * Mon Jan  5 2015 Ivan Epifanov <isage.dna@gmail.com> - 3.2.2-1.R
 - update to 3.2.2
 
