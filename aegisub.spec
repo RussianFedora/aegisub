@@ -1,7 +1,7 @@
 Summary:	Advanced Subtitle Editor
 Name:		aegisub
 Version:	3.2.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 URL:		http://www.aegisub.org
 Group:		Applications/Multimedia
@@ -86,6 +86,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Nov 04 2015 Vasiliy N. Glazov <vascom2@gmail.com> 3.2.2-2.R
+- bump release fo rebuild
+
 * Mon Jan  5 2015 Ivan Epifanov <isage.dna@gmail.com> - 3.2.2-1.R
 - update to 3.2.2
 
