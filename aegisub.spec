@@ -7,6 +7,7 @@ URL:		http://www.aegisub.org
 Group:		Applications/Multimedia
 License:	BSD
 Source0:	http://ftp.aegisub.org/pub/archives/releases/source/%{name}-%{version}.tar.xz
+Patch0:	fix-tools-ldflags.patch
 
 BuildRequires:	alsa-lib-devel
 BuildRequires:	portaudio-devel
@@ -40,7 +41,7 @@ professional, hobby, and everyday use.
 
 %prep
 %setup -q -n %{name}-%{version}
-
+%patch0 -p1 -b .ldflags
 
 %build
 #remove version postfix
@@ -86,6 +87,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Nov 04 2015 Ivan Epifanov <isage.dna@gmail.com> - 3.2.2-3.R
+- Fix tools ldflags
+
 * Wed Nov 04 2015 Vasiliy N. Glazov <vascom2@gmail.com> 3.2.2-2.R
 - bump release fo rebuild
 
