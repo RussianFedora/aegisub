@@ -1,33 +1,29 @@
 Summary:	Advanced Subtitle Editor
 Name:		aegisub
 Version:	3.2.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 URL:		http://www.aegisub.org
 Group:		Applications/Multimedia
 License:	BSD
 Source0:	http://ftp.aegisub.org/pub/archives/releases/source/%{name}-%{version}.tar.xz
-Patch0:	fix-tools-ldflags.patch
+Patch0:	        fix-tools-ldflags.patch
 
-BuildRequires:	alsa-lib-devel
-BuildRequires:	portaudio-devel
-BuildRequires:	pulseaudio-libs-devel
-BuildRequires:	libass-devel
-BuildRequires:	ffmpeg-devel
-BuildRequires:	fftw-devel
-BuildRequires:	hunspell-devel
+BuildRequires:	pkgconfig(alsa)
+BuildRequires:	pkgconfig(portaudio-2.0)
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(libass)
+BuildRequires:	pkgconfig(libavcodec)
+BuildRequires:	pkgconfig(fftw3)
+BuildRequires:	pkgconfig(hunspell)
 BuildRequires:	wxGTK3-devel
-%if 0%{?fedora} >= 20
-BuildRequires:	compat-lua-devel
-%else
-BuildRequires:	lua-devel
-%endif
-BuildRequires:	freetype-devel
-BuildRequires:	mesa-libGLU-devel
-BuildRequires:	mesa-libGL-devel
-BuildRequires:	ffms2-devel
+BuildRequires:	pkgconfig(lua-5.1)
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(gl)
+BuildRequires:	pkgconfig(ffms2)
 BuildRequires:	boost-devel
-BuildRequires:	libicu-devel
+BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	desktop-file-utils
 BuildRequires:	intltool
 
@@ -52,7 +48,7 @@ sed -e 's/aegisub-3\.2/aegisub/' -e 's/aegisub-32/aegisub/' -i configure
 	--with-player-audio=pulseaudio \
 	--with-wx-config=wx-config-3.0
 
-make %{?_smp_mflags}
+%make_build
 
 
 %install
@@ -79,7 +75,8 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files -f %{name}.lang
-%doc LICENCE automation/demos/ automation/v4-docs/
+%doc automation/demos/ automation/v4-docs/
+%license LICENCE
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_datadir}/applications/%{name}.desktop
@@ -87,6 +84,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jun 22 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 3.2.2-3
+- Rebuild for new boost
+
 * Wed Nov 04 2015 Ivan Epifanov <isage.dna@gmail.com> - 3.2.2-3.R
 - Fix tools ldflags
 
